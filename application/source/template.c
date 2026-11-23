@@ -10,6 +10,7 @@
 #include "brururrur_wav.h"
 #include "frames_tpl.h"
 #include "frame_delays.h"
+#include "stdio.h"
 
 #define SOUND_VOICE 0
 
