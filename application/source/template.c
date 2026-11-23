@@ -217,5 +217,25 @@ int main(int argc, char **argv) {
 	GRRLIB_FreeTexture(bagel);
 	GRRLIB_Exit();
 
+	// go to a console
+	GXRModeObj *conMode = VIDEO_GetPreferredMode(NULL);
+	void *conXfb = MEM_K0_TO_K1(SYS_AllocateFramebuffer(conMode));
+	console_init(conXfb, 20, 20, conMode->fbWidth, conMode->xfbHeight,
+	             conMode->fbWidth * VI_DISPLAY_PIX_SZ);
+	VIDEO_Configure(conMode);
+	VIDEO_ClearFrameBuffer(conMode, conXfb, COLOR_BLACK);
+	VIDEO_SetNextFramebuffer(conXfb);
+	VIDEO_SetBlack(false);
+	VIDEO_Flush();
+	VIDEO_WaitVSync();
+	if (conMode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
+
+	printf("\x1b[2;0H");
+	printf("Bye!\n");
+
+	u32 byeStartMs = nowMs();
+	while (nowMs() - byeStartMs < 1000)
+		VIDEO_WaitVSync();
+
 	exit(0);
 }
